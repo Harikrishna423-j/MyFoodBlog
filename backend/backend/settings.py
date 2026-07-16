@@ -85,6 +85,10 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
+# Allow large video uploads (100 MB)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 104857600   # 100 MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 104857600   # 100 MB
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {

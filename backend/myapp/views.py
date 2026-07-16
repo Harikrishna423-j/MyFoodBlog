@@ -45,10 +45,10 @@ def register_view(request):
 
     send_mail(
         subject="Welcome to MyFood Blog!",
-        message=f"Hi {email},\n\nWelcome to MyFood Blog! Check out our recipes here: http://localhost:5173/recipes",
+        message=f"Hi {email},\n\nWelcome to MyFood Blog! Check out our recipes here: https://harikrishna423-j.github.io/MyFoodBlog/recipes",
         from_email="noreply@myfoodblog.com",
         recipient_list=[email],
-        fail_silently=False,
+        fail_silently=True,
     )
 
     refresh = RefreshToken.for_user(user)
