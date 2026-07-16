@@ -11,8 +11,7 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    # PythonAnywhere domain — update with your username
-    os.environ.get("PYTHONANYWHERE_HOST", "harikrishna423j.pythonanywhere.com"),
+    "hari112.pythonanywhere.com",
 ]
 
 INSTALLED_APPS = [
