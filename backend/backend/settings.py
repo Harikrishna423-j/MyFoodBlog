@@ -4,9 +4,16 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "your-secret-key"
-DEBUG = True
-ALLOWED_HOSTS = []
+# Read from environment; fall back to dev defaults
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "your-secret-key-change-in-production")
+DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
+
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    # PythonAnywhere domain — update with your username
+    os.environ.get("PYTHONANYWHERE_HOST", "harikrishna423j.pythonanywhere.com"),
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -24,6 +31,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # serve static files in production
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -72,12 +80,14 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  # needed for collectstatic
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# ✅ ONE clean REST_FRAMEWORK block — JWT only, no SessionAuthentication
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -87,18 +97,17 @@ REST_FRAMEWORK = {
     ],
 }
 
-# ✅ JWT token lifetimes (access token short-lived, refresh token longer-lived)
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": False,
 }
 
-# ✅ CORS — needed so your React app (localhost:5173) can call this backend
+# CORS — allow local dev and the deployed GitHub Pages frontend
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "https://harikrishna423-j.github.io",
 ]
 
-
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-DEFAULT_FROM_EMAIL = "noreply@myfoodblog.com"
+DEFAULT_FROM_EMAIL = "noreply@myfoodblog.com"
